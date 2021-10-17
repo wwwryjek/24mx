@@ -75,7 +75,7 @@ describe('www-24mx-ie on desktop', () => {
       })
   })
 
-  it('Product details page', () => {
+  it.skip('Product details page', () => {
     cy.xpath("//input[@id='search-desktop']").type("helmet{enter}")
     cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
     // check popups with benefits
@@ -101,8 +101,7 @@ describe('www-24mx-ie on desktop', () => {
     // Submit form
     cy.get('.ng-invalid.ng-star-inserted > p-button > .m-button').should('have.text', ' Send ').click()
 
-    // Check recently
-
+    // Check "recently"
     //  go to bottom page
     cy.scrollTo('bottom')
     cy.get('p-last-viewed-products.ng-star-inserted > .o-productlist > :nth-child(1) > .m-vignette > span').should('have.text', 'Recently viewed')
@@ -121,11 +120,47 @@ describe('www-24mx-ie on desktop', () => {
   })
 
   it.skip('Popups with benefits', () => {
-    cy.visit('https://www.24mx.ie/')
+    // cy.get('p-usp.ng-tns-c65-22 > .o-usp-list').any().click()
+    cy.get('.o-usp-list > .row > :nth-child(1)').should('have.text', 'Fast deliveries').click()
+    cy.get('h2.ng-tns-c65-11').should('have.text', 'Fast deliveries')
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-button').click()
+
+    cy.get('.o-usp-list > .row > :nth-child(2)').should('have.text', 'Lowest Price Guarantee').click()
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-button').click()
+
+    cy.get('.o-usp-list > .row > :nth-child(3)').should('have.text', 'Free shipping over €100*').click()
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-button').click()
+
+    cy.get('.o-usp-list > .row > :nth-child(4)').should('have.text', '60-day return policy*').click()
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-button').click()
+
+    cy.get('.o-usp-list > .row > :nth-child(5)').should('have.text', 'Free Size Exchanges*').click()
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-button').click()
+
+
   })
 
-  it.skip('Recently viewed', () => {
-    cy.visit('https://www.24mx.ie/')
+  it('Recently viewed', () => {
+    cy.xpath("//input[@id='search-desktop']").type("helmet{enter}")
+    // check what to do to increse all
+    // cy.get('p-last-viewed-products.ng-star-inserted > .o-productlist > :nth-child(1) > .m-vignette > span').should('not.be.visible')
+    cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+    cy.scrollTo('bottom')
+    cy.get('.m-items-slider__content').click()
+
+
+//    // cy.go('back')
+//    // cy.get('.qa-pl-items-grid > :nth-child(2) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+//    // cy.go('back')
+//    // cy.get('.qa-pl-items-grid > :nth-child(3) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+//    // cy.go('back')
+
+
   })
 })
 
