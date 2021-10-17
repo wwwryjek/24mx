@@ -1,14 +1,12 @@
 describe('www-24mx-ie on desktop', () => {
   beforeEach(() => {
     cy.viewport(1200, 768)
-    // test recently
     cy.visit('https://www.24mx.ie/')
     cy.xpath('//div[contains(@class,"NostoCloseButton")]').click()
     cy.xpath('//div[contains(@class,"qa-consent-agree-btn")]').click()
-
+    
   })
-  // skip to delete
-  it('Fast Checkout', () => {
+  it.skip('Fast Checkout', () => {
     cy.xpath("//input[@id='search-desktop']").type("helmet")
     cy.get(':nth-child(6) > .autocomplete-item').click()
     cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
@@ -29,12 +27,17 @@ describe('www-24mx-ie on desktop', () => {
     cy.get('.m-checkout-finalize > p-button > .m-button').click()
     cy.get('.paySubmit').click()
   })
-  // skip to delete
   it.skip('Check Logo', () => {
-    cy.get('.d-inline-block > img').should('be.visible')
+    cy.get('.d-inline-block')
+      .find("img")
+      .should('be.visible')
+      .and(($img) => {
+      // "naturalWidth" and "naturalHeight" are set when the image loads
+        expect($img[0].naturalWidth).to.be.eq(296)
+      })
   })
 
-  it.skip('Shopping cart edit', () => {
+  it.skip ('Shopping cart edit', () => {
     cy.xpath("//input[@id='search-desktop']").type("helmet{enter}")
     cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
     cy.get('.m-select__display').click()
@@ -45,14 +48,16 @@ describe('www-24mx-ie on desktop', () => {
     // cy.get('.m-product-pricing__price').should('have.text', ' €79.99 ').then(($price1) => {
     // const cena1 = $price1.text()
     // })  
-    cy.get('.m-product-pricing__price').should('have.text', ' €79.99 ').as('pricing__price')
+    // Hardcoded compare with price
+    cy.get('.m-product-pricing__price').should('have.text', ' €59.99 ').as('pricing__price')
     // ALIASES:
     // cy.get('.m-product-pricing__price').invoke('text').as('text')
     // cy.get('.m-product-pricing__original-price').then(($price2) => {
     // const cena2 = $price2.text()
     //   })  
+    
     cy.get('.m-product-pricing__original-price').invoke('text').as('original-price')
-
+    // cy.get('.m-product-pricing__original-price').as('original-price')
     
     // cy.log($price2)
     // cy.log($price1)
@@ -61,12 +66,12 @@ describe('www-24mx-ie on desktop', () => {
     // Click proceed to checkout
     cy.get('.o-cart-process__added > .a-textlink').should('have.text', ' Proceed to checkout ').click({ timeout: 10000 })
     // check price on checkout
-    cy.get('.qa-product-actual-price').as('actual-price').should('have.text', ' €79.99 ')
+    cy.get('.qa-product-actual-price').as('actual-price').should('have.text', ' €59.99 ')
     // cy.get('.qa-product-actual-price').should('have.text', test)
     cy.get('.qa-product-actual-price').then(($price3) => {
       const cena3 = $price3.text()
 
-      cy.wrap(cena3).should('have.text', '@original-price')
+      cy.wrap(cena3).eq('@original-price')
       })
   })
 
@@ -77,7 +82,27 @@ describe('www-24mx-ie on desktop', () => {
     cy.get('p-usp.ng-tns-c65-22 > .o-usp-list').any().click()
     // close popup
     cy.get('.m-overlay__closeBtn > .m-button').click()
+    // check 3 accordions
+    cy.get('article.ng-tns-c108-15 > .ng-tns-c108-15 > .ng-star-inserted').should('be.visible')
+    // close 1st accordion
+    cy.get('h4.ng-tns-c108-15').click()
+    // Next accordion
+    cy.get('h4.ng-tns-c108-18').should('be.visible').click()
+    cy.get('p-accordion.ng-tns-c108-18 > .m-accordion > .m-accordion__content > .m-accordion__content-inner').should('be.visible')
+    // Close 2nd accordion
+    cy.get('h4.ng-tns-c108-18').should('be.visible').click()
+    cy.get('p-accordion.ng-tns-c108-18 > .m-accordion > .m-accordion__content > .m-accordion__content-inner').should('be.visible')
+    //open 3rd accordion
+    cy.get('p-accordion.ng-tns-c108-21 > .m-accordion > .m-accordion__header').should('be.visible').click()
+    // fill short form from 3rd accordion
+    cy.get('p-input[type="text"] > .m-input > .ng-untouched').type("akarczewski")
+    cy.get('.ng-untouched.ng-star-inserted > p-input[type="email"] > .m-input > .ng-untouched').type("akarczewski")
+    cy.get('.ng-invalid.ng-star-inserted > .ng-pristine').type("Test Me")
+    // Submit form
+    cy.get('.ng-invalid.ng-star-inserted > p-button > .m-button').should('have.text', ' Send ').click()
+
     // Check recently
+
     //  go to bottom page
     cy.scrollTo('bottom')
     cy.get('p-last-viewed-products.ng-star-inserted > .o-productlist > :nth-child(1) > .m-vignette > span').should('have.text', 'Recently viewed')

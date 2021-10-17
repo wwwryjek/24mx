@@ -1,12 +1,3 @@
-// 1. go to page
-// 2. find close NostoPopUpWrapper button
-// 3. click button
-// 4. find button close cookies info
-// 5. click close cookies info
-// const estores = ['https://www.24mx.ie/', 'https://www.24mx.pl/']
-// const sizes = ['iphone-6', 'ipad-2', [1124, 768]]
-
-
 describe('www-24mx-ie on tablet', () => {
   beforeEach(() => {
     cy.viewport('ipad-2')
@@ -16,7 +7,7 @@ describe('www-24mx-ie on tablet', () => {
 
   })
 
-  it('Fast Checkout', () => {
+  it.skip('Fast Checkout', () => {
     cy.xpath("//input[@id='search-tablet']").type("helmet")
     cy.get(':nth-child(6) > .autocomplete-item').click()
     cy.get('.o-product-card__blocklink,ng-star-inserted a').any().click()
@@ -38,22 +29,27 @@ describe('www-24mx-ie on tablet', () => {
   })
 
   it('Check Logo', () => {
-    cy.get('.d-inline-block > img').should('be.visible')
+    cy.get('.a-logo-link > img')
+      .should('be.visible')
+      .and(($img) => {
+      // "naturalWidth" and "naturalHeight" are set when the image loads
+        expect($img[0].naturalWidth).to.be.eq(296)
+      })
   })
 
-  it('Shopping cart edit', () => {
+  it.skip('Shopping cart edit', () => {
     cy.visit('https://www.24mx.ie/')
   })
 
-  it('Product details page', () => {
+  it.skip('Product details page', () => {
     cy.visit('https://www.24mx.ie/')
   })
 
-  it('Popups with benefits', () => {
+  it.skip('Popups with benefits', () => {
     cy.visit('https://www.24mx.ie/')
   })
 
-  it('Recently viewed', () => {
+  it.skip('Recently viewed', () => {
     cy.visit('https://www.24mx.ie/')
   })
 })

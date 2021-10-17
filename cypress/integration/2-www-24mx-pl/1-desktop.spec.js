@@ -1,12 +1,3 @@
-// 1. go to page
-// 2. find close NostoPopUpWrapper button
-// 3. click button
-// 4. find button close cookies info
-// 5. click close cookies info
-// const estores = ['https://www.24mx.pl/', 'https://www.24mx.pl/']
-// const sizes = ['iphone-6', 'ipad-2', [1124, 768]]
-
-
 describe('www-24mx-pl on desktop', () => {
   beforeEach(() => {
     cy.viewport(1200, 768)
@@ -38,7 +29,13 @@ describe('www-24mx-pl on desktop', () => {
   })
 
   it('Check Logo', () => {
-    cy.get('.d-inline-block > img').should('be.visible')
+    cy.get('.d-inline-block')
+      .find("img")
+      .should('be.visible')
+      .and(($img) => {
+      // "naturalWidth" and "naturalHeight" are set when the image loads
+        expect($img[0].naturalWidth).to.be.eq(296)
+      })
   })
 
   it('Shopping cart edit', () => {
