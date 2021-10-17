@@ -1,0 +1,4 @@
+{
+  "pageLoadTimeout": 10000,
+  "chromeWebSecurity": false 
+}
