@@ -1,12 +1,3 @@
-// 1. go to page
-// 2. find close NostoPopUpWrapper button
-// 3. click button
-// 4. find button close cookies info
-// 5. click close cookies info
-// const estores = ['https://www.24mx.ie/', 'https://www.24mx.pl/']
-// const sizes = ['iphone-6', 'ipad-2', [1124, 768]]
-
-
 describe('www-24mx-ie on desktop', () => {
   beforeEach(() => {
     cy.viewport(1200, 768)
