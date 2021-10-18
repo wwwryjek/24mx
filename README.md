@@ -1,7 +1,11 @@
 # 24mx - testing in Cypress
-Testing 24mx in Cypress.
-<<<<<<< HEAD
+Testing www.24mx.ie and www.24mx.pl in Cypress.
 
+# How to run?
 
-=======
->>>>>>> 4f1ca36228761ff030aaf71a9b5e60ceb317beca
+To run this test you need to have installed Cypress
+
+```
+npm install cypress
+```
+
