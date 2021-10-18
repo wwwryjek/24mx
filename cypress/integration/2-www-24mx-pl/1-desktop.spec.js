@@ -7,22 +7,39 @@ describe('www-24mx-pl on desktop', () => {
     
   })
   it('Fast Checkout', () => {
-    cy.xpath("//input[@id='search-desktop']").type("kask")
-    cy.get(':nth-child(6) > .autocomplete-item').click()
+    cy.xpath("//input[@id='search-desktop']").type("kask{enter}")
+    // cy.get(':nth-child(6) > .autocomplete-item').click()
     cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
-    cy.get('p-button.ng-star-inserted > .m-button').click()    
+    // cy.get('.m-image-slider__slide--current > .ng-star-inserted').should('be.visible')
+    cy.get('.m-image-slider__slide--current > .ng-star-inserted')
+      .should('be.visible')
+      .and(($img) => {
+      // "naturalWidth" and "naturalHeight" are set when the image loads
+        expect($img[0].naturalWidth).to.be.eq(630)
+      })
+    cy.get('body').then(($body) => {
+    if ($body.find('.m-select__display').length > 0) {   
+      cy.get('.m-select__display').click()  
+      cy.get('.m-select__items-wrapper li').any().click()
+      cy.get('p-button.ng-star-inserted > .m-button').click()
+    } else {
+      cy.get('p-button.ng-star-inserted > .m-button').click()
+      }
+  }) 
     cy.get('.o-cart-process__added > .a-textlink').click()
     cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('be.visible')
     cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('not.be.visible')
     cy.get('#checkout-email').type("fgn4uqn9q584j@mailinator.com")
-    cy.get('#checkout-mobileNumber').type("1234567890")
+    cy.get('#checkout-mobileNumber').type("123456789")
     cy.get('#checkout-firstName').type("TEST")
     cy.get('#checkout-surname').type("TEST")
-    cy.get('#checkout-companyName').type("TEST")
+        // Not available for .pl store
+    //cy.get('#checkout-companyName').type("TEST")
     cy.get('#checkout-streetAndHouseNumber').type("TEST")
-    cy.get('#checkout-postCode').type("de12345")
+    cy.get('#checkout-postCode').type("22-222")
     cy.get('#checkout-city').type("TEST")
-    cy.get('#checkout-county').type("TEST")
+            // Not available for .pl store
+    // cy.get('#checkout-county').type("TEST")
     cy.get('.m-checkout-finalize > p-button > .m-button').click()
     cy.get('.paySubmit').click()
   
@@ -55,16 +72,15 @@ describe('www-24mx-pl on desktop', () => {
     // const cena2 = $price2.text()
     //   })  
       // Hardcoded compare with price
-    cy.get('.m-product-pricing__price').should('have.text', ' €59.99 ').as('pricing__price')
-    
+    cy.get('.m-product-pricing__price').should('have.text', ' 249,99 zł ').as('pricing__price')
     
     cy.get('.m-product-pricing__original-price').invoke('text').as('original-price')
     // check add to cart button and click
-    cy.get('p-button.ng-star-inserted > .m-button').should('have.text', ' Add to cart ').click()
+    cy.get('p-button.ng-star-inserted > .m-button').should('have.text', ' Dodaj do koszyka ').click()
     // Click proceed to checkout
-    cy.get('.o-cart-process__added > .a-textlink').should('have.text', ' Proceed to checkout ').click({ timeout: 10000 })
+    cy.get('.o-cart-process__added > .a-textlink').should('have.text', ' Przejdź do kasy ').click({ timeout: 10000 })
     // check price on checkout
-    cy.get('.qa-product-actual-price').as('actual-price').should('have.text', ' €59.99 ')
+    cy.get('.qa-product-actual-price').as('actual-price').should('have.text', ' 249,99 zł ')
     // cy.get('.qa-product-actual-price').should('have.text', test)
     // Compate with const - to fix
     // cy.get('.qa-product-actual-price').then(($price3) => {
@@ -91,19 +107,20 @@ describe('www-24mx-pl on desktop', () => {
     // Close 2nd accordion
     cy.get('h4.ng-tns-c108-18').should('be.visible').click()
     cy.get('p-accordion.ng-tns-c108-18 > .m-accordion > .m-accordion__content > .m-accordion__content-inner').should('be.visible')
-    //open 3rd accordion
-    cy.get('p-accordion.ng-tns-c108-21 > .m-accordion > .m-accordion__header').should('be.visible').click()
-    // fill short form from 3rd accordion
-    cy.get('p-input[type="text"] > .m-input > .ng-untouched').type("akarczewski")
-    cy.get('.ng-untouched.ng-star-inserted > p-input[type="email"] > .m-input > .ng-untouched').type("akarczewski")
-    cy.get('.ng-invalid.ng-star-inserted > .ng-pristine').type("Test Me")
-    // Submit form
-    cy.get('.ng-invalid.ng-star-inserted > p-button > .m-button').should('have.text', ' Send ').click()
+        // not availabel for .pl store
+    // //open 3rd accordion
+    // cy.get('p-accordion.ng-tns-c108-21 > .m-accordion > .m-accordion__header').should('be.visible').click()
+    // // fill short form from 3rd accordion
+    // cy.get('p-input[type="text"] > .m-input > .ng-untouched').type("akarczewski")
+    // cy.get('.ng-untouched.ng-star-inserted > p-input[type="email"] > .m-input > .ng-untouched').type("akarczewski")
+    // cy.get('.ng-invalid.ng-star-inserted > .ng-pristine').type("Test Me")
+    // // Submit form
+    // cy.get('.ng-invalid.ng-star-inserted > p-button > .m-button').should('have.text', ' Send ').click()
 
     // Check "recently"
     //  go to bottom page
     cy.scrollTo('bottom')
-    cy.get('p-last-viewed-products.ng-star-inserted > .o-productlist > :nth-child(1) > .m-vignette > span').should('have.text', 'Recently viewed')
+    cy.get('p-last-viewed-products.ng-star-inserted > .o-productlist > :nth-child(1) > .m-vignette > span').should('have.text', 'Ostatnio przeglądane produkty')
     // check if product displays
     cy.get('.m-items-slider__items > .col-6 > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-img').should('be.visible')
     // check if image is available
@@ -125,19 +142,23 @@ describe('www-24mx-pl on desktop', () => {
     cy.get('p.ng-tns-c65-11').should('be.visible')
     cy.get('.m-button').click()
 
-    cy.get('.o-usp-list > .row > :nth-child(2)').should('have.text', 'Lowest Price Guarantee').click()
+    cy.get('.o-usp-list > .row > :nth-child(2)').should('have.text', 'Gwarancja Najniższej Ceny').click()
+    cy.get('h2.ng-tns-c65-11').should('have.text', 'Gwarancja Najniższej Ceny')
     cy.get('p.ng-tns-c65-11').should('be.visible')
     cy.get('.m-button').click()
 
-    cy.get('.o-usp-list > .row > :nth-child(3)').should('have.text', 'Free shipping over €100*').click()
+    cy.get('.o-usp-list > .row > :nth-child(3)').should('have.text', 'Darmowa wysyłka powyżej 250zl*').click()
+    cy.get('h2.ng-tns-c65-11').should('have.text', 'Darmowa wysyłka powyżej 250zl*')
     cy.get('p.ng-tns-c65-11').should('be.visible')
     cy.get('.m-button').click()
 
-    cy.get('.o-usp-list > .row > :nth-child(4)').should('have.text', '60-day return policy*').click()
+    cy.get('.o-usp-list > .row > :nth-child(4)').should('have.text', '60-dniowa gwarancja zwrotu*').click()
+    cy.get('h2.ng-tns-c65-11').should('have.text', '60-dniowa gwarancja zwrotu*')
     cy.get('p.ng-tns-c65-11').should('be.visible')
     cy.get('.m-button').click()
 
-    cy.get('.o-usp-list > .row > :nth-child(5)').should('have.text', 'Free Size Exchanges*').click()
+    cy.get('.o-usp-list > .row > :nth-child(5)').should('have.text', 'Darmowa Wymiana Rozmiaru*').click()
+    cy.get('h2.ng-tns-c65-11').should('have.text', 'Darmowa Wymiana Rozmiaru*')
     cy.get('p.ng-tns-c65-11').should('be.visible')
     cy.get('.m-button').click()
 
