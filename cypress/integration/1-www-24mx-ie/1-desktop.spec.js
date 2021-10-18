@@ -6,11 +6,10 @@ describe('www-24mx-ie on desktop', () => {
     cy.xpath('//div[contains(@class,"qa-consent-agree-btn")]').click()
     
   })
-  it.skip('Fast Checkout', () => {
+  it('Fast Checkout', () => {
     cy.xpath("//input[@id='search-desktop']").type("helmet")
     cy.get(':nth-child(6) > .autocomplete-item').click()
     cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
-    // cy.get('.qa-pl-items-grid > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').any().click()
     cy.get('p-button.ng-star-inserted > .m-button').click()    
     cy.get('.o-cart-process__added > .a-textlink').click()
     cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('be.visible')
@@ -26,8 +25,10 @@ describe('www-24mx-ie on desktop', () => {
     cy.get('#checkout-county').type("TEST")
     cy.get('.m-checkout-finalize > p-button > .m-button').click()
     cy.get('.paySubmit').click()
+  
   })
-  it.skip('Check Logo', () => {
+  
+  it('Check Logo', () => {
     cy.get('.d-inline-block')
       .find("img")
       .should('be.visible')
@@ -37,30 +38,27 @@ describe('www-24mx-ie on desktop', () => {
       })
   })
 
-  it.skip ('Shopping cart edit', () => {
+  it('Shopping cart edit', () => {
     cy.xpath("//input[@id='search-desktop']").type("helmet{enter}")
     cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
     cy.get('.m-select__display').click()
     // select random Size of product
     cy.get('.m-select__items-wrapper li').any().click()
     // remember price on product page
-   // NOT ALIASES:
+      // NOT ALIASES:
     // cy.get('.m-product-pricing__price').should('have.text', ' €79.99 ').then(($price1) => {
     // const cena1 = $price1.text()
     // })  
-    // Hardcoded compare with price
-    cy.get('.m-product-pricing__price').should('have.text', ' €59.99 ').as('pricing__price')
-    // ALIASES:
+      // ALIASES:
     // cy.get('.m-product-pricing__price').invoke('text').as('text')
     // cy.get('.m-product-pricing__original-price').then(($price2) => {
     // const cena2 = $price2.text()
     //   })  
+      // Hardcoded compare with price
+    cy.get('.m-product-pricing__price').should('have.text', ' €59.99 ').as('pricing__price')
+    
     
     cy.get('.m-product-pricing__original-price').invoke('text').as('original-price')
-    // cy.get('.m-product-pricing__original-price').as('original-price')
-    
-    // cy.log($price2)
-    // cy.log($price1)
     // check add to cart button and click
     cy.get('p-button.ng-star-inserted > .m-button').should('have.text', ' Add to cart ').click()
     // Click proceed to checkout
@@ -68,14 +66,15 @@ describe('www-24mx-ie on desktop', () => {
     // check price on checkout
     cy.get('.qa-product-actual-price').as('actual-price').should('have.text', ' €59.99 ')
     // cy.get('.qa-product-actual-price').should('have.text', test)
-    cy.get('.qa-product-actual-price').then(($price3) => {
-      const cena3 = $price3.text()
+    // Compate with const - to fix
+    // cy.get('.qa-product-actual-price').then(($price3) => {
+    //   const cena3 = $price3.text()
 
-      cy.wrap(cena3).eq('@original-price')
-      })
+    //   cy.wrap(cena3).eq('€59.99')
+    //   })
   })
 
-  it.skip('Product details page', () => {
+  it('Product details page', () => {
     cy.xpath("//input[@id='search-desktop']").type("helmet{enter}")
     cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
     // check popups with benefits
@@ -119,7 +118,7 @@ describe('www-24mx-ie on desktop', () => {
 
   })
 
-  it.skip('Popups with benefits', () => {
+  it('Popups with benefits', () => {
     // cy.get('p-usp.ng-tns-c65-22 > .o-usp-list').any().click()
     cy.get('.o-usp-list > .row > :nth-child(1)').should('have.text', 'Fast deliveries').click()
     cy.get('h2.ng-tns-c65-11').should('have.text', 'Fast deliveries')
@@ -147,26 +146,20 @@ describe('www-24mx-ie on desktop', () => {
 
   it('Recently viewed', () => {
     cy.xpath("//input[@id='search-desktop']").type("helmet{enter}")
-    // check what to do to increse all
-    // cy.get('p-last-viewed-products.ng-star-inserted > .o-productlist > :nth-child(1) > .m-vignette > span').should('not.be.visible')
     cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+    
+    cy.visit('https://www.24mx.ie/')
+    cy.xpath("//input[@id='search-desktop']").type("helmet bag{enter}")
+
+    cy.get('.qa-pl-items-grid > :nth-child(2) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+    cy.visit('https://www.24mx.ie/')
+    cy.xpath("//input[@id='search-desktop']").type("jacket{enter}")
+
+    cy.get('.qa-pl-items-grid > :nth-child(3) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click() 
+    cy.visit('https://www.24mx.ie/')
+
     cy.scrollTo('bottom')
-    cy.get('.m-items-slider__content').click()
-
-
-//    // cy.go('back')
-//    // cy.get('.qa-pl-items-grid > :nth-child(2) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
-//    // cy.go('back')
-//    // cy.get('.qa-pl-items-grid > :nth-child(3) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
-//    // cy.go('back')
-
+    cy.get('.m-items-slider__content').should('be.visible')
 
   })
 })
-
-// backlog kode
-// cy.get('.o-product-card__blocklink,ng-star-inserted a').any().click()
-    // cy.get('.o-product-card__blocklink,ng-star-inserted a').click()
-    // cy.get('.m-product-card-img,m-product-card-img--square div').any().click()
-    // cy.xpath("//a[@class='o-product-card__blocklink']").first().click()
-    // cy.get('.m-product-card-img__fade-in img').any().click()

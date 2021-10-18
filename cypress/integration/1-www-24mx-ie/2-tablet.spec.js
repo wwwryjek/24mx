@@ -6,12 +6,19 @@ describe('www-24mx-ie on tablet', () => {
     cy.xpath('//div[contains(@class,"qa-consent-agree-btn")]').click()
 
   })
-
-  it.skip('Fast Checkout', () => {
-    cy.xpath("//input[@id='search-tablet']").type("helmet")
-    cy.get(':nth-child(6) > .autocomplete-item').click()
-    cy.get('.o-product-card__blocklink,ng-star-inserted a').any().click()
-    cy.get('p-button.ng-star-inserted > .m-button').click()
+  it('Fast Checkout', () => {
+    cy.xpath("//input[@id='search-tablet']").type("bag{enter}")
+    // cy.get(':nth-child(6) > .autocomplete-item').click()
+    cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+    // cy.get('.o-product-card__blocklink,ng-star-inserted a').any().click()
+    cy.get('body').then(($body) => {
+    if ($body.find('.m-select__display').length > 0) {   
+      cy.get('.m-select__items-wrapper li').any().click()
+      cy.get('p-button.ng-star-inserted > .m-button').click()
+    } else {
+      cy.get('p-button.ng-star-inserted > .m-button').click()
+      }
+  })
     cy.get('.o-cart-process__added > .a-textlink').click()
     cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('be.visible')
     cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('not.be.visible')
@@ -37,19 +44,139 @@ describe('www-24mx-ie on tablet', () => {
       })
   })
 
-  it.skip('Shopping cart edit', () => {
-    cy.visit('https://www.24mx.ie/')
+  it('Shopping cart edit', () => {
+    cy.xpath("//input[@id='search-tablet']").type("helmet{enter}")
+    cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+    cy.get('.m-select__display').click()
+    // select random Size of product
+    cy.get('.m-select__items-wrapper li').any().click()
+    // remember price on product page
+      // NOT ALIASES:
+    // cy.get('.m-product-pricing__price').should('have.text', ' €79.99 ').then(($price1) => {
+    // const cena1 = $price1.text()
+    // })  
+      // ALIASES:
+    // cy.get('.m-product-pricing__price').invoke('text').as('text')
+    // cy.get('.m-product-pricing__original-price').then(($price2) => {
+    // const cena2 = $pricy.get('[customclass="m-button m-button--remove qa-checkout-product-remove-btn"] > .m-button').click()ce2.text()
+    //   })  
+    
+      // Hardcoded compare with price
+    cy.get('.m-product-pricing__price').should('have.text', ' €59.99 ').as('pricing__price')
+    
+    
+    cy.get('.m-product-pricing__original-price').invoke('text').as('original-price')
+    // check add to cart button and click
+    cy.get('p-button.ng-star-inserted > .m-button').should('have.text', ' Add to cart ').click()
+
+    // Click proceed to checkout
+    cy.get('.o-cart-process__added > .a-textlink').should('have.text', ' Proceed to checkout ').click({ timeout: 10000 })
+    // Waitign for chadow to go away
+    cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('be.visible')
+    cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('not.be.visible')
+    
+     // Add another product from  Looking for something more? 
+    cy.get(':nth-child(1) > .m-checkout-list__item-content > .m-checkout-list__item-actions > p-button > .m-button > .m-button__default').any().click()
+    cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('not.be.visible')
+
+    // Edit product
+    cy.get('.m-checkout-list__item-actions > .m-button > span').any().click()
+    cy.get('.m-checkout-list__item-actions-quantity--plus > .ng-fa-icon > .svg-inline--fa > path').click()
+    // Save edition
+    cy.get('[customclass="m-button m-button--navigation m-button--edit qa-checkout-product-save-btn"]').click()
+    // check price on checkout - TODO
+    // cy.get('.qa-product-actual-price').as('actual-price').should('have.text', ' €59.99 ')
+    
+    cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('not.be.visible')
+
+    // Remove product:
+    cy.get('.m-checkout-list__item-actions > .m-button > span').any().click()
+    cy.get('[customclass="m-button m-button--remove qa-checkout-product-remove-btn"] > .m-button').click()
+    cy.get('p-checkout-form > .m-checkout-box > :nth-child(2) > .m-checkout-box__overlay', { timeout: 10000 }).should('not.be.visible')
+
+   
+    // cy.get('.qa-product-actual-price').should('have.text', test)
+    // Compate with const - to fix
+    // cy.get('.qa-product-actual-price').then(($price3) => {
+    //   const cena3 = $price3.text()
+
+    //   cy.wrap(cena3).eq('€59.99')
+    //   })
+    // 
   })
 
-  it.skip('Product details page', () => {
-    cy.visit('https://www.24mx.ie/')
+  it('Product details page', () => {
+    cy.xpath("//input[@id='search-tablet']").type("helmet{enter}")
+    cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+    // check popups with benefits - not available on TABLET
+        // cy.get('p-usp.ng-tns-c65-22 > .o-usp-list').any().click()
+        // close popup
+        // cy.get('.m-overlay__closeBtn > .m-button').click()
+    // check 3 accordions 1st is not expanded
+    // cy.get('article.ng-tns-c108-15 > .ng-tns-c108-15 > .ng-star-inserted').should('be.visible')
+    // Next accordion
+    
+    // cy.get('*[class^="ng-tns-c"]').any().click()
+    cy.xpath('//div[contains(@class, "m-accordion__header")]').any().click()
+    // cy.get('*[class^="p-accordion > .ng-tns-c"]').any().click()
+    
+    // fill short form from 3rd accordion
+
+        // cy.get('p-input[type="text"] > .m-input > .ng-untouched').type("TestName")
+        // cy.get('.ng-untouched.ng-star-inserted > p-input[type="email"] > .m-input > .ng-untouched').type("TestEmail")
+        // cy.get('.ng-invalid.ng-star-inserted > .ng-pristine').type("Test Me")
+        // // Check Submit form button - don't send ot
+        // cy.get('.ng-invalid.ng-star-inserted > p-button > .m-button').should('have.text', ' Send ').click()
+
+
   })
 
-  it.skip('Popups with benefits', () => {
-    cy.visit('https://www.24mx.ie/')
+  it('Popups with benefits', () => {
+    
+    // One working example
+    // cy.get('.o-usp-list > .row > :nth-child(4)').click()
+    // dynamic chacking from element 4 
+
+    // TO check wny popup "Fast deliveries" - not working
+    // cy.get('.o-usp-list > .row > :nth-child(1)').should('have.text', 'Fast deliveries').click()
+    // cy.get('p.ng-tns-c65-11').should('be.visible')
+    // cy.get('.m-overlay__closeBtn > .m-button').click()
+        // possible to exclude "nth-child(2)"
+    cy.get('.o-usp-list > .row > :nth-child(2)').should('have.text', 'Lowest Price Guarantee').click()
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-overlay__closeBtn > .m-button').click()
+
+    cy.get('.o-usp-list > .row > :nth-child(3)').should('have.text', 'Free shipping over €100*').click()
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-overlay__closeBtn > .m-button').click()
+    
+    cy.get('.o-usp-list > .row > :nth-child(4)').should('have.text', '60-day return policy*').click()
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-overlay__closeBtn > .m-button').click()
+
+    cy.get('.o-usp-list > .row > :nth-child(5)').should('have.text', 'Free Size Exchanges*').click()
+    cy.get('p.ng-tns-c65-11').should('be.visible')
+    cy.get('.m-overlay__closeBtn > .m-button').click()
+
   })
 
-  it.skip('Recently viewed', () => {
+  it('Recently viewed', () => {
+    cy.xpath("//input[@id='search-tablet']").type("helmet{enter}")
+    cy.get('.qa-pl-items-grid > :nth-child(1) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+    
     cy.visit('https://www.24mx.ie/')
+    cy.xpath("//input[@id='search-tablet']").type("helmet bag{enter}")
+
+    cy.get('.qa-pl-items-grid > :nth-child(2) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click()
+    cy.visit('https://www.24mx.ie/')
+    cy.xpath("//input[@id='search-tablet']").type("jacket{enter}")
+
+    cy.get('.qa-pl-items-grid > :nth-child(3) > p-productcard > .o-product-card__blocklink > .o-product-card > .o-product-card__container > .m-product-card-info > .m-product-card-info__container').click() 
+    cy.visit('https://www.24mx.ie/')
+
+    cy.scrollTo('bottom')
+    // cy.get('.m-items-slider__content').should('be.visible')
+    cy.get('p-last-viewed-products.ng-star-inserted > .o-productlist > :nth-child(1) > .m-vignette > span').should('have.text', 'Recently viewed')
+
   })
 })
